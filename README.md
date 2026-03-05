@@ -1,2 +1,1 @@
-# eyesTraining
 眼部跟随运动辅助小工具

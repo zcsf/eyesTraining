@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>眼睛锻炼训练 - Eye Training Exercise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+        
+        :root {
+            /* 现代化配色方案 - 健康护眼主题 */
+            --primary: #10B981;
+            --primary-light: #34D399;
+            --primary-lighter: #6EE7B7;
+            --primary-dark: #059669;
+            --secondary: #8B5CF6;
+            --secondary-light: #A78BFA;
+            
+            /* 背景渐变 - 护眼色调 */
+            --bg-gradient-start: #F0FDF4;
+            --bg-gradient-end: #ECFDF5;
+            --canvas-bg: #FFFFFF;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(16, 185, 129, 0.2);
+            
+            /* 文字颜色 */
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+            --text-accent: #10B981;
+            
+            /* 状态颜色 */
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            
+            /* 阴影 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* 轨迹颜色 */
+            --trail-color: #10B981;
+            --trail-glow: rgba(16, 185, 129, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text-primary);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        /* 全屏模式样式 */
+        body.fullscreen {
+            background: #000 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        body.fullscreen * {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.fullscreen .navbar,
+        body.fullscreen .sidebar,
+        body.fullscreen .control-panel {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        body.fullscreen .canvas-container {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block !important;
+            z-index: 1000;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #000 !important;
+        }
+        
+        body.fullscreen #trainingCanvas {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            max-width: none !important;
+            max-height: none !important;
+            border: none !important;
+            outline: none !important;
+        }
+        
+        /* 全屏模式下的方向指示器 */
+        body.fullscreen .direction-indicator {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            z-index: 1001;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 全屏控制面板 - 完全隐藏模式 */
+        .fullscreen-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* 默认完全隐藏 */
+        .fullscreen-controls.collapsed {
+            transform: translateY(100%);
+        }
+        
+        /* 独立的切换按钮 - 始终可见 */
+        .fullscreen-toggle-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            z-index: 1002;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* 只在全屏模式下显示切换指示器 */
+        body.fullscreen .fullscreen-toggle-indicator {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .fullscreen-toggle-indicator:hover {
+            background: rgba(16, 185, 129, 0.8);
+            transform: translateX(-50%) scale(1.1);
+        }
+        
+        .fullscreen-toggle-btn {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 30px;
+            border-radius: 15px 15px 0 0;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 1002;
+        }
+        
+        .fullscreen-toggle-btn:hover {
+            background: rgba(16, 185, 129, 0.8);
+            transform: translateX(-50%) scale(1.1);
+        }
+        
+        .fullscreen-controls-panel {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .fullscreen-controls .btn-primary {
+            width: 70px;
+            height: 70px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #10B981, #34D399);
+        }
+        
+        .fullscreen-controls .toggle-switch span {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .fullscreen-controls .btn-direction {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            padding: 0.6rem 1.2rem;
+        }
+        
+        .fullscreen-controls .btn-direction:hover,
+        .fullscreen-controls .btn-direction.active {
+            background: rgba(16, 185, 129, 0.8);
+            border-color: #10B981;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* 隐藏原始控制面板在全屏模式下 */
+        body.fullscreen .fullscreen-controls {
+            display: block;
+        }
+        
+        .fullscreen-controls {
+            display: none;
+        }
+        
+
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* 现代化玻璃态效果 */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+            border-radius: 20px;
+        }
+        
+        .glass-dark {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        /* 顶部导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+        
+        .navbar-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+        
+        .navbar-title .icon {
+            font-size: 36px;
+            -webkit-text-fill-color: initial;
+        }
+        
+        /* Canvas区域 - 响应式全屏支持 */
+        .canvas-container {
+            margin-top: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            min-height: calc(100vh - 300px);
+        }
+        
+        #trainingCanvas {
+            background: var(--canvas-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            cursor: crosshair;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 95vw;
+            max-height: 70vh;
+        }
+        
+        #trainingCanvas:hover {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .direction-indicator {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            box-shadow: var(--shadow-lg);
+            animation: fadeInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.025em;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* 底部控制面板 */
+        .control-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+        
+        .btn-primary {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .btn-primary:hover::after {
+            width: 140%;
+            height: 140%;
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+        
+        /* Toggle开关 */
+        .toggle-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .toggle-switch input {
+            display: none;
+        }
+        
+        .toggle-slider {
+            width: 60px;
+            height: 32px;
+            background: #ddd;
+            border-radius: 16px;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(28px);
+        }
+        
+        /* 速度控制滑块 */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0.5rem 0;
+        }
+        
+        .speed-control label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+        
+        .speed-slider {
+            flex: 1;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+        
+        .speed-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
+        .speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .speed-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* 方向按钮组 */
+        .direction-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-direction {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-direction::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn-direction:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .btn-direction:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-direction.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-direction.active::before {
+            transform: scaleX(1);
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            position: fixed;
+            right: 2rem;
+            top: 100px;
+            width: 280px;
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+            z-index: 50;
+        }
+        
+        .stat-card {
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stat-item {
+            margin-bottom: 1.25rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.08);
+            transition: all 0.2s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(16, 185, 129, 0.12);
+        }
+        
+        .stat-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-value:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 设置面板 */
+        .settings-panel {
+            position: fixed;
+            right: -360px;
+            top: 0;
+            width: 360px;
+            height: 100vh;
+            z-index: 200;
+            overflow-y: auto;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem;
+        }
+        
+        .settings-panel.open {
+            right: 0;
+        }
+        
+        .settings-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .settings-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .setting-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* 颜色选择器样式 */
+        .color-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-options input[type="radio"] {
+            display: none;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .color-options input[type="radio"]:checked + .color-option {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        .color-options input[type="radio"]:checked + .color-option::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        
+        .icon-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: white;
+        }
+        
+        .icon-option:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .icon-option.selected {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        /* 按钮样式 */
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .btn-icon:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-icon:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .btn-icon:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-reset {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 2px solid var(--danger);
+            background: white;
+            color: var(--danger);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .btn-reset:hover {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 1200px) {
+            .sidebar {
+                right: 1rem;
+                width: 240px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 1rem;
+                height: 60px;
+            }
+            
+            .navbar-title {
+                font-size: 20px;
+            }
+            
+            .navbar-title .icon {
+                font-size: 28px;
+            }
+            
+            .canvas-container {
+                margin-top: 80px;
+                padding: 1rem;
+            }
+            
+            #trainingCanvas {
+                max-width: 100%;
+                width: 100%;
+                height: auto;
+            }
+            
+            .sidebar {
+                position: fixed;
+                bottom: 140px;
+                right: 0;
+                left: 0;
+                width: auto;
+                max-height: 200px;
+                margin: 0 1rem;
+                z-index: 40;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-item {
+                display: inline-block;
+                width: calc(33.333% - 0.5rem);
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+                vertical-align: top;
+            }
+            
+            .stat-item:last-child {
+                margin-right: 0;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+            
+            .control-panel {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+            
+            .btn-primary {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .direction-buttons {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .btn-direction {
+                font-size: 13px;
+                padding: 0.5rem 1rem;
+            }
+            
+            .settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        
+        /* 触摸设备优化 */
+        @media (hover: none) and (pointer: coarse) {
+            .btn-primary:hover,
+            .btn-icon:hover,
+            .btn-direction:hover {
+                transform: none;
+            }
+            
+            .btn-primary:active {
+                transform: scale(0.95);
+            }
+            
+            .btn-icon:active {
+                transform: scale(0.95);
+            }
+            
+            .btn-direction:active {
+                transform: translateY(0) scale(0.95);
+            }
+        }
+        
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar glass">
+        <div class="navbar-title">
+            <span class="icon">👁️</span>
+            眼睛锻炼训练
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button class="btn-icon" id="fullscreenBtn" aria-label="全屏模式" title="全屏模式">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+            </button>
+            <button class="btn-icon" id="soundToggle" aria-label="音效开关" title="音效开关">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                </svg>
+            </button>
+            <button class="btn-icon" id="settingsBtn" aria-label="设置" title="设置">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+
+
+    <!-- Canvas动画区域 -->
+    <div class="canvas-container">
+        <div style="position: relative;">
+            <div class="direction-indicator" id="directionIndicator">准备开始</div>
+            <canvas id="trainingCanvas" width="1200" height="800"></canvas>
+        </div>
+    </div>
+
+    <!-- 底部控制面板 -->
+    <div class="control-panel glass">
+        <button class="btn-primary" id="startBtn" aria-label="开始训练" title="开始/暂停">
+            ▶️
+        </button>
+        
+        <label class="toggle-switch">
+            <span style="font-size: 14px; font-weight: 500; color: var(--text-secondary);">自动模式</span>
+            <input type="checkbox" id="modeToggle" checked>
+            <span class="toggle-slider"></span>
+        </label>
+        
+        <div class="speed-control">
+            <label for="speedSlider">速度</label>
+            <input type="range" id="speedSlider" class="speed-slider" 
+                   min="0.3" max="3.0" step="0.1" value="1.0">
+            <span class="speed-value" id="speedValue">1.0x</span>
+        </div>
+        
+        <div class="direction-buttons" id="directionButtons" style="display: none;">
+            <button class="btn-direction" data-direction="horizontal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14m-7-7l7 7-7 7"/>
+                </svg>
+                水平
+            </button>
+            <button class="btn-direction" data-direction="vertical">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14m-7-7l7-7 7 7"/>
+                </svg>
+                垂直
+            </button>
+            <button class="btn-direction" data-direction="diagonal1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                </svg>
+                斜向1
+            </button>
+            <button class="btn-direction" data-direction="diagonal2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 17L7 7M7 7h10M7 7v10"/>
+                </svg>
+                斜向2
+            </button>
+            <button class="btn-direction" data-direction="figure8h">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 12c-2-2-6-2-6 2s4 4 6 2 6 2 6-2-4-4-6-2z"/>
+                </svg>
+                水平8字
+            </button>
+            <button class="btn-direction" data-direction="figure8v">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 12c2-2 2-6-2-6s-4 4-2 6-2 6 2 6 4-4 2-6z"/>
+                </svg>
+                垂直8字
+            </button>
+        </div>
+    </div>
+
+    <!-- 全屏模式专用控制面板 -->
+    <div class="fullscreen-controls collapsed" id="fullscreenControls">
+        <button class="fullscreen-toggle-btn" id="fullscreenToggleBtn">
+            ▲
+        </button>
+        <div class="fullscreen-controls-panel">
+            <button class="btn-primary" id="fullscreenStartBtn" aria-label="开始训练" title="开始/暂停">
+                ▶️
+            </button>
+            
+            <label class="toggle-switch">
+                <span style="font-size: 14px; font-weight: 500;">自动模式</span>
+                <input type="checkbox" id="fullscreenModeToggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+            
+            <div class="speed-control">
+                <label for="fullscreenSpeedSlider">速度</label>
+                <input type="range" id="fullscreenSpeedSlider" class="speed-slider" 
+                       min="0.3" max="3.0" step="0.1" value="1.0">
+                <span class="speed-value" id="fullscreenSpeedValue">1.0x</span>
+            </div>
+            
+            <div class="direction-buttons" id="fullscreenDirectionButtons" style="display: none;">
+                <button class="btn-direction" data-direction="horizontal">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14m-7-7l7 7-7 7"/>
+                    </svg>
+                    水平
+                </button>
+                <button class="btn-direction" data-direction="vertical">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14m-7-7l7-7 7 7"/>
+                    </svg>
+                    垂直
+                </button>
+                <button class="btn-direction" data-direction="diagonal1">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                    </svg>
+                    斜向1
+                </button>
+                <button class="btn-direction" data-direction="diagonal2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 17L7 7M7 7h10M7 7v10"/>
+                    </svg>
+                    斜向2
+                </button>
+                <button class="btn-direction" data-direction="figure8h">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 12c-2-2-6-2-6 2s4 4 6 2 6 2 6-2-4-4-6-2z"/>
+                    </svg>
+                    水平8字
+                </button>
+                <button class="btn-direction" data-direction="figure8v">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 12c2-2 2-6-2-6s-4 4-2 6-2 6 2 6 4-4 2-6z"/>
+                    </svg>
+                    垂直8字
+                </button>
+            </div>
+            
+            <button class="fullscreen-exit-btn" id="fullscreenExitBtn2">退出全屏</button>
+        </div>
+    </div>
+
+    <!-- 独立的全屏切换指示器 -->
+    <div class="fullscreen-toggle-indicator" id="fullscreenToggleIndicator">
+        ▲
+    </div>
+
+    <!-- 侧边统计面板 -->
+    <aside class="sidebar">
+        <div class="stat-card glass-dark">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
+                📊 训练统计
+            </h3>
+            <div class="stat-item">
+                <div class="stat-label">训练次数</div>
+                <div class="stat-value" id="trainCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">累计时长</div>
+                <div class="stat-value" id="trainDuration" style="font-size: 24px;">00:00</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">当前方向</div>
+                <div style="font-size: 18px; font-weight: 500; color: var(--primary);" id="currentDirection">
+                    未开始
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 设置面板 -->
+    <div class="settings-overlay" id="settingsOverlay"></div>
+    <aside class="settings-panel glass-dark" id="settingsPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 24px; font-weight: 600;">⚙️ 设置</h2>
+            <button class="btn-icon" id="closeSettings" aria-label="关闭" title="关闭">
+                ✖️
+            </button>
+        </div>
+
+        <div class="setting-item">
+            <label class="setting-label">
+                运动速度: <span id="settingsSpeedValue">1.0</span>x
+            </label>
+            <input type="range" class="slider" id="settingsSpeedSlider" min="0.3" max="3" step="0.1" value="1">
+        </div>
+
+        <div class="setting-item">
+            <label class="setting-label">
+                图标大小: <span id="sizeValue">48</span>px
+            </label>
+            <input type="range" class="slider" id="sizeSlider" min="20" max="80" step="2" value="48">
+        </div>
+
+        <div class="setting-item">
+            <label class="setting-label">显示轨迹线</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="trailToggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <label class="setting-label">背景颜色</label>
+            <div class="color-options">
+                <input type="radio" id="bg-light" name="backgroundColor" value="#f8f9fa" checked>
+                <label for="bg-light" class="color-option" style="background-color: #f8f9fa;" title="浅灰色"></label>
+                
+                <input type="radio" id="bg-white" name="backgroundColor" value="#ffffff">
+                <label for="bg-white" class="color-option" style="background-color: #ffffff;" title="纯白色"></label>
+                
+                <input type="radio" id="bg-cream" name="backgroundColor" value="#fefcf3">
+                <label for="bg-cream" class="color-option" style="background-color: #fefcf3;" title="米白色"></label>
+                
+                <input type="radio" id="bg-green" name="backgroundColor" value="#f0f8f0">
+                <label for="bg-green" class="color-option" style="background-color: #f0f8f0;" title="护眼绿"></label>
+                
+                <input type="radio" id="bg-blue" name="backgroundColor" value="#f0f4f8">
+                <label for="bg-blue" class="color-option" style="background-color: #f0f4f8;" title="浅蓝色"></label>
+                
+                <input type="radio" id="bg-dark" name="backgroundColor" value="#2d3748">
+                <label for="bg-dark" class="color-option" style="background-color: #2d3748;" title="深色模式"></label>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <label class="setting-label">选择图标</label>
+            <div class="icon-grid" id="iconGrid"></div>
+        </div>
+
+        <div class="setting-item">
+            <button class="btn-reset" id="resetStats">重置统计数据</button>
+        </div>
+
+        <div class="setting-item" style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+            <strong style="color: var(--text-primary);">💡 使用说明</strong><br>
+            眼球运动训练有助于缓解眼疲劳,增强眼部肌肉。建议每天训练10-15分钟,训练时保持头部静止,只让眼睛跟随图标移动。按F键或点击全屏按钮进入全屏模式获得更好的训练体验。
+        </div>
+    </aside>
+
+    <script>
+        // ========== 配置对象 ==========
+        const TrainingConfig = {
+            directions: {
+                horizontal: { 
+                    name: '水平', 
+                    icon: '↔️',
+                    path: [[0,0], [1.0,0], [0,0], [0,0], [-1.0,0], [0,0]]
+                },
+                vertical: { 
+                    name: '垂直', 
+                    icon: '↕️',
+                    path: [[0,0], [0,-1.0], [0,0], [0,0], [0,1.0], [0,0]]
+                },
+                diagonal1: { 
+                    name: '斜向↘', 
+                    icon: '↘️',
+                    path: [[0,0], [1.0,1.0], [0,0], [0,0], [-1.0,-1.0], [0,0]]
+                },
+                diagonal2: { 
+                    name: '斜向↙', 
+                    icon: '↙️',
+                    path: [[0,0], [-1.0,1.0], [0,0], [0,0], [1.0,-1.0], [0,0]]
+                },
+                figure8h: {
+                    name: '水平8字',
+                    icon: '∞',
+                    path: generateFigure8Path('horizontal')
+                },
+                figure8v: {
+                    name: '垂直8字', 
+                    icon: '∞',
+                    path: generateFigure8Path('vertical')
+                }
+            },
+            moveDuration: 2500,  // 运动时间（基础值）
+            pauseDuration: 500,  // 增加中心点停顿时间到0.5秒
+            figure8Duration: 5000,  // 8字运动一个完整循环的时间，与直线运动总时间匹配
+            defaultSpeed: 1,
+            speedRange: { min: 0.3, max: 3.0 }, // 速度调整范围：0.3倍到3倍
+            icons: ['🐱', '🐶', '🐰', '🦋', '🐝', '🐞', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯']
+        };
+
+        // 生成8字轨迹路径
+        function generateFigure8Path(orientation) {
+            const points = [];
+            const numPoints = 50;
+            // 使用完整屏幕范围的8字形运动
+            const scale = orientation === 'horizontal' ? 1.0 : 1.0;
+            
+            for (let i = 0; i <= numPoints; i++) {
+                const t = (i / numPoints) * 2 * Math.PI;
+                
+                if (orientation === 'horizontal') {
+                    // 水平8字: x = a*sin(t), y = a*sin(t)*cos(t)
+                    const x = scale * Math.sin(t);
+                    const y = scale * Math.sin(t) * Math.cos(t) * 0.8;
+                    points.push([x, y]);
+                } else {
+                    // 垂直8字: x = a*sin(t)*cos(t), y = a*sin(t)
+                    const x = scale * Math.sin(t) * Math.cos(t) * 0.8;
+                    const y = scale * Math.sin(t);
+                    points.push([x, y]);
+                }
+            }
+            
+            return points;
+        }
+
+        // ========== 全局状态 ==========
+        let appState = {
+            isRunning: false,
+            isPaused: false,
+            mode: 'auto',
+            currentDirection: 'horizontal',
+            currentDirectionIndex: 0,
+            directionOrder: ['horizontal', 'vertical', 'diagonal1', 'diagonal2', 'figure8h', 'figure8v'],
+            settings: {
+                speed: 1,
+                iconSize: 48,
+                showTrail: true,
+                soundEnabled: true,
+                selectedIcon: '🐱',
+                backgroundColor: '#f8f9fa'
+            },
+            statistics: {
+                totalCount: 0,
+                totalDuration: 0,
+                sessionStart: null
+            }
+        };
+
+        // ========== DOM元素 ==========
+        const canvas = document.getElementById('trainingCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const modeToggle = document.getElementById('modeToggle');
+        const directionButtons = document.getElementById('directionButtons');
+        const directionIndicator = document.getElementById('directionIndicator');
+        const soundToggle = document.getElementById('soundToggle');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeSettings = document.getElementById('closeSettings');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        
+        // 全屏控制面板元素
+        const fullscreenControls = document.getElementById('fullscreenControls');
+        const fullscreenToggleBtn = document.getElementById('fullscreenToggleBtn');
+        const fullscreenToggleIndicator = document.getElementById('fullscreenToggleIndicator');
+        const fullscreenStartBtn = document.getElementById('fullscreenStartBtn');
+        const fullscreenModeToggle = document.getElementById('fullscreenModeToggle');
+        const fullscreenDirectionButtons = document.getElementById('fullscreenDirectionButtons');
+        const fullscreenExitBtn2 = document.getElementById('fullscreenExitBtn2');
+
+        // 统计元素
+        const trainCount = document.getElementById('trainCount');
+        const trainDuration = document.getElementById('trainDuration');
+        const currentDirectionEl = document.getElementById('currentDirection');
+
+        // 设置元素
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        const fullscreenSpeedSlider = document.getElementById('fullscreenSpeedSlider');
+        const fullscreenSpeedValue = document.getElementById('fullscreenSpeedValue');
+        const settingsSpeedSlider = document.getElementById('settingsSpeedSlider');
+        const settingsSpeedValue = document.getElementById('settingsSpeedValue');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const trailToggle = document.getElementById('trailToggle');
+        const backgroundColorOptions = document.querySelectorAll('input[name="backgroundColor"]');
+        const iconGrid = document.getElementById('iconGrid');
+        const resetStats = document.getElementById('resetStats');
+
+        // ========== 初始化 ==========
+        function init() {
+            loadSettings();
+            loadStatistics();
+            initializeUI();
+            setupEventListeners();
+            drawInitialState();
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('eyeTrainingSettings');
+            if (saved) {
+                appState.settings = { ...appState.settings, ...JSON.parse(saved) };
+            }
+            applySettings();
+        }
+
+        function loadStatistics() {
+            const saved = localStorage.getItem('eyeTrainingStats');
+            if (saved) {
+                appState.statistics = { ...appState.statistics, ...JSON.parse(saved) };
+                updateStatisticsDisplay();
+            }
+        }
+
+        function saveSettings() {
+            localStorage.setItem('eyeTrainingSettings', JSON.stringify(appState.settings));
+        }
+
+        function saveStatistics() {
+            localStorage.setItem('eyeTrainingStats', JSON.stringify(appState.statistics));
+        }
+
+        // 速度控制函数
+        function updateSpeed(value) {
+            appState.settings.speed = parseFloat(value);
+            const displayValue = parseFloat(value).toFixed(1);
+            
+            // 更新所有速度显示
+            speedValue.textContent = displayValue + 'x';
+            fullscreenSpeedValue.textContent = displayValue + 'x';
+            settingsSpeedValue.textContent = displayValue;
+            
+            // 同步所有滑块的值
+            speedSlider.value = value;
+            fullscreenSpeedSlider.value = value;
+            settingsSpeedSlider.value = value;
+        }
+
+        function updateBackgroundColor(color) {
+            appState.settings.backgroundColor = color;
+            document.documentElement.style.setProperty('--canvas-bg', color);
+            
+            // 更新选中状态
+            backgroundColorOptions.forEach(option => {
+                option.checked = option.value === color;
+            });
+        }
+
+        // 根据背景颜色获取适合的绘制颜色
+        function getDrawingColors() {
+            const isDark = appState.settings.backgroundColor === '#2d3748';
+            return {
+                // 轨迹线颜色
+                trailStroke: isDark ? 'rgba(74, 222, 128, 0.6)' : 'rgba(16, 185, 129, 0.4)',
+                trailFill: isDark ? 'rgba(74, 222, 128, 0.4)' : 'rgba(16, 185, 129, 0.3)',
+                // 中心点颜色
+                centerFill: isDark ? 'rgba(74, 222, 128, 0.3)' : 'rgba(16, 185, 129, 0.2)',
+                centerStroke: isDark ? 'rgba(74, 222, 128, 0.4)' : 'rgba(16, 185, 129, 0.3)',
+                // 图标文字颜色
+                iconText: isDark ? '#ffffff' : '#111827',
+                // 主要绿色
+                primary: isDark ? '#4ade80' : '#10B981'
+            };
+        }
+
+        function applySettings() {
+            updateSpeed(appState.settings.speed);
+            sizeSlider.value = appState.settings.iconSize;
+            sizeValue.textContent = appState.settings.iconSize;
+            trailToggle.checked = appState.settings.showTrail;
+            updateBackgroundColor(appState.settings.backgroundColor);
+            updateSoundIcon();
+        }
+
+        function updateSoundIcon() {
+            const soundIcon = soundToggle.querySelector('svg');
+            if (appState.settings.soundEnabled) {
+                soundIcon.innerHTML = `
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                `;
+            } else {
+                soundIcon.innerHTML = `
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <line x1="23" y1="9" x2="17" y2="15"/>
+                    <line x1="17" y1="9" x2="23" y2="15"/>
+                `;
+            }
+        }
+
+        // 全屏功能
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    document.body.classList.add('fullscreen');
+                    resizeCanvas();
+                }).catch(err => {
+                    console.log('无法进入全屏模式:', err);
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    document.body.classList.remove('fullscreen');
+                    resizeCanvas();
+                });
+            }
+        }
+
+
+
+        function resizeCanvas() {
+            if (document.body.classList.contains('fullscreen')) {
+                // 确保获取准确的屏幕尺寸
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                
+                // 设置canvas的实际尺寸
+                canvas.width = width;
+                canvas.height = height;
+                
+                // 确保CSS尺寸也匹配
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                
+                console.log('全屏模式 - Canvas尺寸:', width, 'x', height);
+            } else {
+                canvas.width = 1200;
+                canvas.height = 800;
+                canvas.style.width = '1200px';
+                canvas.style.height = '800px';
+            }
+            
+            if (!appState.isRunning) {
+                drawInitialState();
+            }
+        }
+
+        function initializeUI() {
+            // 初始化图标网格
+            TrainingConfig.icons.forEach(icon => {
+                const div = document.createElement('div');
+                div.className = 'icon-option';
+                if (icon === appState.settings.selectedIcon) {
+                    div.classList.add('selected');
+                }
+                div.textContent = icon;
+                div.onclick = () => selectIcon(icon);
+                iconGrid.appendChild(div);
+            });
+        }
+
+        function drawInitialState() {
+            const colors = getDrawingColors();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制中心点
+            ctx.fillStyle = colors.centerFill;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制中心圆环
+            ctx.strokeStyle = colors.centerStroke;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 25, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // 绘制图标阴影（调小）
+            const isDarkInit = appState.settings.backgroundColor === '#2d3748';
+            ctx.shadowColor = isDarkInit ? 'rgba(74, 222, 128, 0.2)' : 'rgba(16, 185, 129, 0.2)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 2;
+            
+            // 绘制图标
+            ctx.font = `${appState.settings.iconSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = colors.primary;
+            ctx.fillText(appState.settings.selectedIcon, canvas.width / 2, canvas.height / 2);
+            
+            // 重置阴影
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+
+        // ========== 事件监听器 ==========
+        function setupEventListeners() {
+            // 开始/暂停按钮
+            startBtn.onclick = toggleTraining;
+            
+            // 模式切换
+            modeToggle.onchange = () => {
+                appState.mode = modeToggle.checked ? 'auto' : 'manual';
+                directionButtons.style.display = appState.mode === 'manual' ? 'flex' : 'none';
+            };
+            
+            // 速度控制
+            speedSlider.oninput = (e) => {
+                updateSpeed(e.target.value);
+                saveSettings();
+            };
+            
+            fullscreenSpeedSlider.oninput = (e) => {
+                updateSpeed(e.target.value);
+                saveSettings();
+            };
+            
+            settingsSpeedSlider.oninput = (e) => {
+                updateSpeed(e.target.value);
+                saveSettings();
+            };
+            
+            // 方向按钮
+            document.querySelectorAll('.btn-direction').forEach(btn => {
+                btn.onclick = () => {
+                    if (appState.mode === 'manual') {
+                        appState.currentDirection = btn.dataset.direction;
+                        document.querySelectorAll('.btn-direction').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        updateDirectionIndicator();
+                    }
+                };
+            });
+            
+            // 设置按钮
+            settingsBtn.onclick = () => {
+                settingsPanel.classList.add('open');
+                settingsOverlay.classList.add('active');
+            };
+            
+            closeSettings.onclick = () => {
+                settingsPanel.classList.remove('open');
+                settingsOverlay.classList.remove('active');
+            };
+            
+            settingsOverlay.onclick = closeSettings.onclick;
+            
+            // 全屏按钮
+            fullscreenBtn.onclick = toggleFullscreen;
+            
+
+            
+
+            
+            // 全屏控制面板切换函数
+            function toggleFullscreenControls() {
+                fullscreenControls.classList.toggle('collapsed');
+                const isCollapsed = fullscreenControls.classList.contains('collapsed');
+                fullscreenToggleBtn.textContent = isCollapsed ? '▲' : '▼';
+                fullscreenToggleIndicator.textContent = isCollapsed ? '▲' : '▼';
+            }
+            
+            // 全屏控制面板事件
+            fullscreenToggleBtn.onclick = toggleFullscreenControls;
+            fullscreenToggleIndicator.onclick = toggleFullscreenControls;
+            
+            fullscreenStartBtn.onclick = toggleTraining;
+            
+            fullscreenModeToggle.onchange = () => {
+                appState.mode = fullscreenModeToggle.checked ? 'auto' : 'manual';
+                fullscreenDirectionButtons.style.display = appState.mode === 'manual' ? 'flex' : 'none';
+                // 同步普通模式切换
+                modeToggle.checked = fullscreenModeToggle.checked;
+                directionButtons.style.display = appState.mode === 'manual' ? 'flex' : 'none';
+            };
+            
+            fullscreenExitBtn2.onclick = () => {
+                if (document.fullscreenElement) {
+                    toggleFullscreen();
+                }
+            };
+            
+            // 全屏方向按钮
+            document.querySelectorAll('#fullscreenDirectionButtons .btn-direction').forEach(btn => {
+                btn.onclick = () => {
+                    if (appState.mode === 'manual') {
+                        appState.currentDirection = btn.dataset.direction;
+                        // 同步两个面板的按钮状态
+                        document.querySelectorAll('.btn-direction').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll(`[data-direction="${btn.dataset.direction}"]`).forEach(b => b.classList.add('active'));
+                        updateDirectionIndicator();
+                    }
+                };
+            });
+            
+            // 音效切换
+            soundToggle.onclick = () => {
+                appState.settings.soundEnabled = !appState.settings.soundEnabled;
+                updateSoundIcon();
+                saveSettings();
+            };
+            
+            // 大小滑块
+            sizeSlider.oninput = () => {
+                appState.settings.iconSize = parseInt(sizeSlider.value);
+                sizeValue.textContent = appState.settings.iconSize;
+                saveSettings();
+                if (!appState.isRunning) {
+                    drawInitialState();
+                }
+            };
+            
+            // 轨迹线切换
+            trailToggle.onchange = () => {
+                appState.settings.showTrail = trailToggle.checked;
+                saveSettings();
+            };
+            
+            // 背景颜色选择
+            backgroundColorOptions.forEach(option => {
+                option.onchange = () => {
+                    if (option.checked) {
+                        updateBackgroundColor(option.value);
+                        saveSettings();
+                    }
+                };
+            });
+            
+            // 重置统计
+            resetStats.onclick = () => {
+                if (confirm('确定要重置所有训练统计数据吗?')) {
+                    appState.statistics = {
+                        totalCount: 0,
+                        totalDuration: 0,
+                        sessionStart: null
+                    };
+                    saveStatistics();
+                    updateStatisticsDisplay();
+                }
+            };
+
+            // 键盘快捷键支持
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case ' ':
+                    case 'Spacebar':
+                        e.preventDefault();
+                        toggleTraining();
+                        break;
+                    case 'ArrowLeft':
+                        if (appState.mode === 'manual') {
+                            e.preventDefault();
+                            setManualDirection('horizontal');
+                        }
+                        break;
+                    case 'ArrowUp':
+                        if (appState.mode === 'manual') {
+                            e.preventDefault();
+                            setManualDirection('vertical');
+                        }
+                        break;
+                    case 'ArrowDown':
+                        if (appState.mode === 'manual') {
+                            e.preventDefault();
+                            setManualDirection('diagonal1');
+                        }
+                        break;
+                    case 'ArrowRight':
+                        if (appState.mode === 'manual') {
+                            e.preventDefault();
+                            setManualDirection('diagonal2');
+                        }
+                        break;
+                    case 'Escape':
+                        if (settingsPanel.classList.contains('open')) {
+                            closeSettings.onclick();
+                        } else if (document.fullscreenElement) {
+                            toggleFullscreen();
+                        }
+                        break;
+                    case 'f':
+                    case 'F':
+                        if (e.ctrlKey || e.metaKey) {
+                            e.preventDefault();
+                            toggleFullscreen();
+                        }
+                        break;
+                }
+            });
+            
+            // 全屏状态变化监听
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    document.body.classList.remove('fullscreen');
+                    resizeCanvas();
+                } else {
+                    // 进入全屏模式时
+                    document.body.classList.add('fullscreen');
+                    resizeCanvas();
+                }
+            });
+            
+            // 窗口大小变化监听
+            window.addEventListener('resize', () => {
+                if (document.body.classList.contains('fullscreen')) {
+                    resizeCanvas();
+                }
+            });
+        }
+
+        function setManualDirection(direction) {
+            appState.currentDirection = direction;
+            document.querySelectorAll('.btn-direction').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.direction === direction);
+            });
+            updateDirectionIndicator();
+        }
+
+        function selectIcon(icon) {
+            appState.settings.selectedIcon = icon;
+            document.querySelectorAll('.icon-option').forEach(el => {
+                el.classList.toggle('selected', el.textContent === icon);
+            });
+            saveSettings();
+            if (!appState.isRunning) {
+                drawInitialState();
+            }
+        }
+
+        function toggleTraining() {
+            if (!appState.isRunning) {
+                startTraining();
+            } else {
+                pauseTraining();
+            }
+        }
+
+        // ========== 训练控制器 ==========
+        let durationInterval = null;
+
+        function startTraining() {
+            appState.isRunning = true;
+            appState.isPaused = false;
+            startBtn.textContent = '⏸️';
+            startBtn.title = '暂停';
+            fullscreenStartBtn.textContent = '⏸️';
+            fullscreenStartBtn.title = '暂停';
+            
+            if (!appState.statistics.sessionStart) {
+                appState.statistics.sessionStart = Date.now();
+            }
+            
+            updateDirectionIndicator();
+            playSound('start');
+            startAnimation();
+            startDurationCounter();
+        }
+
+        function pauseTraining() {
+            appState.isRunning = false;
+            appState.isPaused = true;
+            startBtn.textContent = '▶️';
+            startBtn.title = '开始';
+            fullscreenStartBtn.textContent = '▶️';
+            fullscreenStartBtn.title = '开始';
+            
+            // 更新累计时长
+            if (appState.statistics.sessionStart) {
+                const sessionDuration = Math.floor((Date.now() - appState.statistics.sessionStart) / 1000);
+                appState.statistics.totalDuration += sessionDuration;
+                appState.statistics.sessionStart = null;
+                saveStatistics();
+            }
+            
+            playSound('pause');
+            cancelAnimationFrame(animationFrameId);
+            stopDurationCounter();
+        }
+
+        function startDurationCounter() {
+            stopDurationCounter(); // 清除可能存在的旧计时器
+            
+            durationInterval = setInterval(() => {
+                if (appState.isRunning && appState.statistics.sessionStart) {
+                    const sessionDuration = Math.floor((Date.now() - appState.statistics.sessionStart) / 1000);
+                    const totalDuration = appState.statistics.totalDuration + sessionDuration;
+                    
+                    const minutes = Math.floor(totalDuration / 60);
+                    const seconds = totalDuration % 60;
+                    trainDuration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function stopDurationCounter() {
+            if (durationInterval) {
+                clearInterval(durationInterval);
+                durationInterval = null;
+            }
+        }
+
+        function updateDirectionIndicator() {
+            const dir = TrainingConfig.directions[appState.currentDirection];
+            directionIndicator.textContent = `${dir.icon} ${dir.name}方向`;
+            currentDirectionEl.textContent = `${dir.icon} ${dir.name}`;
+        }
+
+        function updateStatisticsDisplay() {
+            // 使用动画效果更新计数
+            animateCount(trainCount, parseInt(trainCount.textContent) || 0, appState.statistics.totalCount);
+            
+            const duration = appState.statistics.totalDuration;
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            trainDuration.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function animateCount(element, start, end) {
+            if (start === end) return;
+            
+            const duration = 500; // 动画持续时间
+            const startTime = Date.now();
+            
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(start + (end - start) * easeOutQuad(progress));
+                
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            update();
+        }
+
+        function easeOutQuad(t) {
+            return t * (2 - t);
+        }
+
+        // ========== Canvas动画引擎 ==========
+        let animationFrameId;
+        let animationState = {
+            startTime: null,
+            currentSegment: 0,
+            trailPoints: []
+        };
+
+        function startAnimation() {
+            animationState.startTime = Date.now();
+            animationState.currentSegment = 0;
+            animationState.trailPoints = [];
+            animate();
+        }
+
+        function animate() {
+            if (!appState.isRunning) return;
+
+            const now = Date.now();
+            const elapsed = now - animationState.startTime;
+            const direction = TrainingConfig.directions[appState.currentDirection];
+            const path = direction.path;
+            const adjustedDuration = TrainingConfig.moveDuration / appState.settings.speed;
+
+            // 对于8字轨迹，使用连续动画，但调整速度与直线运动一致
+            if (appState.currentDirection.startsWith('figure8')) {
+                const adjustedFigure8Duration = TrainingConfig.figure8Duration / appState.settings.speed;
+                const progress = (elapsed % adjustedFigure8Duration) / adjustedFigure8Duration;
+                const pathIndex = Math.floor(progress * (path.length - 1));
+                const segmentProgress = (progress * (path.length - 1)) % 1;
+                
+                const currentPoint = path[pathIndex];
+                const nextPoint = path[(pathIndex + 1) % path.length];
+                
+                // 全屏模式下使用完整屏幕范围，让轨迹真正到达边缘
+                const isFullscreen = document.body.classList.contains('fullscreen');
+                const margin = isFullscreen ? 0 : 100; // 全屏时无边距，轨迹到达屏幕边缘
+                const safeWidth = canvas.width - margin * 2;
+                const safeHeight = canvas.height - margin * 2;
+                
+                const x = canvas.width / 2 + (currentPoint[0] + (nextPoint[0] - currentPoint[0]) * segmentProgress) * safeWidth / 2;
+                const y = canvas.height / 2 + (currentPoint[1] + (nextPoint[1] - currentPoint[1]) * segmentProgress) * safeHeight / 2;
+
+                // 添加轨迹点
+                if (appState.settings.showTrail) {
+                    animationState.trailPoints.push({ x, y });
+                    if (animationState.trailPoints.length > 150) {
+                        animationState.trailPoints.shift();
+                    }
+                }
+
+                drawFrame(x, y);
+
+                // 检查是否完成一个完整的8字
+                if (elapsed >= adjustedFigure8Duration) {
+                    onDirectionComplete();
+                    return;
+                }
+            } else {
+                // 线性轨迹逻辑 - 简化版本，确保连续性
+                const adjustedPause = TrainingConfig.pauseDuration / appState.settings.speed;
+                
+                // 为每个路径段分配时间和类型
+                const segments = [];
+                let totalTime = 0;
+                
+                for (let i = 0; i < path.length - 1; i++) {
+                    const start = path[i];
+                    const end = path[i + 1];
+                    const isMovementSegment = (start[0] !== end[0] || start[1] !== end[1]);
+                    
+                    segments.push({
+                        pathIndex: i,
+                        startPoint: start,
+                        endPoint: end,
+                        isMoving: isMovementSegment,
+                        duration: isMovementSegment ? adjustedDuration : adjustedPause,
+                        startTime: totalTime,
+                        endTime: totalTime + (isMovementSegment ? adjustedDuration : adjustedPause)
+                    });
+                    
+                    totalTime += (isMovementSegment ? adjustedDuration : adjustedPause);
+                }
+
+                // 找到当前段
+                let currentSegment = null;
+                for (let i = 0; i < segments.length; i++) {
+                    if (elapsed >= segments[i].startTime && elapsed < segments[i].endTime) {
+                        currentSegment = segments[i];
+                        break;
+                    }
+                }
+
+                // 检查是否完成整个循环
+                if (!currentSegment || elapsed >= totalTime) {
+                    onDirectionComplete();
+                    return;
+                }
+
+                // 计算当前段内的进度
+                const segmentElapsed = elapsed - currentSegment.startTime;
+                const segmentProgress = segmentElapsed / currentSegment.duration;
+                
+                // 计算当前位置
+                let x, y;
+                
+                if (currentSegment.isMoving) {
+                    // 运动段：线性插值
+                    const start = currentSegment.startPoint;
+                    const end = currentSegment.endPoint;
+                    
+                    // 全屏模式下使用完整屏幕范围，窗口模式保持安全边距
+                    const isFullscreen = document.body.classList.contains('fullscreen');
+                    const margin = isFullscreen ? 0 : 100; // 全屏时无边距，轨迹到达屏幕边缘
+                    const safeWidth = canvas.width - margin * 2;
+                    const safeHeight = canvas.height - margin * 2;
+                    
+                    x = canvas.width / 2 + (start[0] + (end[0] - start[0]) * segmentProgress) * safeWidth / 2;
+                    y = canvas.height / 2 + (start[1] + (end[1] - start[1]) * segmentProgress) * safeHeight / 2;
+                } else {
+                    // 停顿段：保持在起始位置
+                    const pos = currentSegment.startPoint;
+                    const isFullscreen = document.body.classList.contains('fullscreen');
+                    const margin = isFullscreen ? 0 : 100; // 全屏时无边距，轨迹到达屏幕边缘
+                    x = canvas.width / 2 + pos[0] * (canvas.width - margin * 2) / 2;
+                    y = canvas.height / 2 + pos[1] * (canvas.height - margin * 2) / 2;
+                }
+
+                // 添加轨迹点（只在运动时添加）
+                if (appState.settings.showTrail && currentSegment.isMoving) {
+                    animationState.trailPoints.push({ x, y });
+                    if (animationState.trailPoints.length > 100) {
+                        animationState.trailPoints.shift();
+                    }
+                }
+
+                // 绘制
+                drawFrame(x, y);
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        function drawFrame(x, y) {
+            const colors = getDrawingColors();
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制轨迹线
+            if (appState.settings.showTrail && animationState.trailPoints.length > 1) {
+                ctx.strokeStyle = colors.trailStroke;
+                ctx.lineWidth = 4;
+                ctx.setLineDash([12, 6]);
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.beginPath();
+                ctx.moveTo(animationState.trailPoints[0].x, animationState.trailPoints[0].y);
+                
+                for (let i = 1; i < animationState.trailPoints.length; i++) {
+                    const alpha = (i / animationState.trailPoints.length) * 0.8;
+                    ctx.globalAlpha = alpha;
+                    ctx.lineTo(animationState.trailPoints[i].x, animationState.trailPoints[i].y);
+                }
+                
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 1;
+            }
+
+            // 绘制中心点指示
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            // 外圆环
+            ctx.strokeStyle = colors.centerStroke;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 25, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // 内圆点
+            ctx.fillStyle = colors.centerFill;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 绘制图标外圈光晕（调小）
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, appState.settings.iconSize * 0.8);
+            const isDark = appState.settings.backgroundColor === '#2d3748';
+            gradient.addColorStop(0, isDark ? 'rgba(74, 222, 128, 0.1)' : 'rgba(16, 185, 129, 0.1)');
+            gradient.addColorStop(0.5, isDark ? 'rgba(74, 222, 128, 0.05)' : 'rgba(16, 185, 129, 0.05)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(x, y, appState.settings.iconSize * 0.8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 绘制图标阴影（调小）
+            const isDarkShadow = appState.settings.backgroundColor === '#2d3748';
+            ctx.shadowColor = isDarkShadow ? 'rgba(74, 222, 128, 0.2)' : 'rgba(16, 185, 129, 0.2)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 2;
+
+            // 绘制图标
+            ctx.font = `${appState.settings.iconSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = colors.iconText;
+            ctx.fillText(appState.settings.selectedIcon, x, y);
+
+            // 重置阴影
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+        }
+
+        function easeInOutCubic(t) {
+            return t < 0.5
+                ? 4 * t * t * t
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function onDirectionComplete() {
+            // 增加计数
+            appState.statistics.totalCount++;
+            updateStatisticsDisplay();
+            saveStatistics();
+
+            // 自动模式下切换方向
+            if (appState.mode === 'auto') {
+                appState.currentDirectionIndex = (appState.currentDirectionIndex + 1) % appState.directionOrder.length;
+                appState.currentDirection = appState.directionOrder[appState.currentDirectionIndex];
+                updateDirectionIndicator();
+                playSound('switch');
+            }
+
+            // 如果仍在运行,开始下一次动画
+            if (appState.isRunning) {
+                setTimeout(() => {
+                    if (appState.isRunning) {
+                        startAnimation();
+                    }
+                }, 500);
+            }
+        }
+
+        // ========== 音效系统 ==========
+        let audioContext = null;
+
+        function initAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!appState.settings.soundEnabled) return;
+            
+            initAudioContext();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // 根据类型设置不同的音效
+            switch (type) {
+                case 'start':
+                    // 上升音效 (800Hz -> 400Hz)
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                    
+                case 'pause':
+                    // 下降音效 (400Hz -> 200Hz)
+                    oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                    
+                case 'switch':
+                    // 方向切换音效 (600Hz 短促)
+                    oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.08);
+                    break;
+            }
+        }
+
+        // ========== 启动应用 ==========
+        init();
+    </script>
+</body>
+</html>

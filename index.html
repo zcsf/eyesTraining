@@ -1672,7 +1672,9 @@
                 if (key === 'bounce' || key.startsWith('figure8')) {
                     const defaultSpeed = key === 'bounce' ? 2 : 1;
                     const minSpeed = key.startsWith('figure8') ? 0.2 : 1;
-                    speedDiv = `<div class="mode-config-speed"><input type="number" min="${minSpeed}" max="3" step="0.1" value="${config.speed || defaultSpeed}" onchange="updateModeSpeed('${key}', this.value)"><span>速</span></div>`;
+                    const maxSpeed = key === 'bounce' ? 15 : 3;
+                    const step = key === 'bounce' ? 0.5 : 0.1;
+                    speedDiv = `<div class="mode-config-speed"><input type="number" min="${minSpeed}" max="${maxSpeed}" step="${step}" value="${config.speed || defaultSpeed}" onchange="updateModeSpeed('${key}', this.value)"><span>速</span></div>`;
                 }
 
                 // 跳转间隔（仅随机位置模式）

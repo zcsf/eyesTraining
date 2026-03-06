@@ -348,7 +348,7 @@
             top: -60px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 1rem 2rem;
+            padding: 8px 24px;
             border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
@@ -359,6 +359,13 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             letter-spacing: 0.025em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            min-width: 140px;
+            z-index: 20;
         }
         
         @keyframes fadeInDown {
@@ -993,7 +1000,182 @@
             background: var(--danger);
             color: white;
         }
-        
+
+        /* ========== 计划卡片操作菜单样式 ========== */
+        .plan-card-actions {
+            position: relative;
+        }
+
+        .plan-card-actions .more-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .plan-card-actions .more-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        .plan-card-actions .more-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .action-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            z-index: 100;
+            min-width: 120px;
+        }
+
+        .plan-card-actions.expanded .action-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .action-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .action-menu-item:hover {
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .action-menu-item svg {
+            flex-shrink: 0;
+        }
+
+        .action-menu-item.delete-item {
+            color: var(--danger);
+        }
+
+        .action-menu-item.delete-item:hover {
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        /* ========== 计划描述截断样式 ========== */
+        .plan-description-wrapper {
+            position: relative;
+            display: inline-block;
+            max-width: 100%; /* 移除固定的 200px，由内联样式或容器控制 */
+            vertical-align: middle;
+            cursor: help;
+        }
+
+        .plan-description-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            width: 100%;
+        }
+
+        .plan-description-wrapper:hover::after {
+            content: attr(data-full-text);
+            position: absolute;
+            left: 0;
+            top: 100%;
+            margin-top: 6px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: normal;
+            word-break: break-all;
+            max-width: 280px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            line-height: 1.4;
+            pointer-events: none;
+        }
+
+        /* ========== 编辑器模态框SVG图标样式 ========== */
+        .modal-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+        }
+
+        .modal-header-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .modal-close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-close-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-save-plan {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-save-plan svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* 响应式 */
         @media (max-width: 1200px) {
             .sidebar {
@@ -1127,13 +1309,279 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(16, 185, 129, 0.5);
         }
+        /* 通用按钮样式优化 */
+        .btn-primary, .btn-secondary, .btn-reset, .btn-save-plan {
+            border-radius: 8px !important;
+        }
+
+        /* 模式选择模态框 */
+        .mode-selector-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        .mode-option-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .mode-option-card:hover {
+            background: #ecfdf5;
+            border-color: #10B981;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1);
+        }
+        .mode-option-card:active {
+            transform: translateY(0);
+        }
+        .mode-option-icon {
+            width: 36px;
+            height: 36px;
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+        .mode-option-card:hover .mode-option-icon {
+            color: #10B981;
+        }
+        .mode-option-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            transition: color 0.2s;
+        }
+        .mode-option-card:hover .mode-option-name {
+            color: #059669;
+        }
+
+        /* 编辑器列表项 - 简约风格 */
+        .editor-mode-item {
+            background: white;
+            border: 1px solid #f3f4f6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .editor-mode-item:hover {
+            border-color: #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: #fcfcfc;
+        }
+        .editor-mode-icon-wrapper {
+            width: 44px;
+            height: 44px;
+            background: #f0fdf9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #10B981;
+            flex-shrink: 0;
+        }
+        .editor-mode-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .editor-mode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .editor-mode-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+        }
+        .editor-mode-params {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .param-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f9fafb;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #f3f4f6;
+        }
+        .param-label {
+            font-size: 12px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .param-input-clean {
+            width: 32px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid transparent;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #10B981;
+            padding: 0;
+            transition: all 0.2s;
+        }
+        .param-input-clean:hover {
+            border-bottom-color: #d1d5db;
+        }
+        .param-input-clean:focus {
+            outline: none;
+            border-bottom-color: #10B981;
+            background: white;
+        }
+        .editor-mode-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 8px;
+            border-left: 1px solid #f3f4f6;
+            padding-left: 12px;
+        }
+        .action-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .action-btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-btn-icon.small {
+            width: 24px;
+            height: 14px;
+            border-radius: 4px;
+        }
+        .action-btn-icon.small svg {
+            width: 14px;
+            height: 14px;
+        }
+        .action-btn-icon:hover:not(:disabled) {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        .action-btn-icon:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .action-btn-icon.delete:hover {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+        
+        /* 模态框通用优化 */
+        .modal-header-simple {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title-simple {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+        .modal-close-simple {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #9ca3af;
+            background: transparent;
+            border: none;
+            transition: all 0.2s;
+        }
+        .modal-close-simple:hover {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        /* Modal Footer Buttons Fix */
+        #savePlanBtn, #cancelPlanBtn {
+            height: 40px !important;
+            padding: 0 16px !important;
+            font-size: 14px !important;
+            border-radius: 8px !important;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Override btn-primary specific styles for save button to make it smaller */
+        #savePlanBtn {
+            width: auto !important; /* Override fixed width if any */
+            flex: 1;
+            /* Ensure the icon fits nicely */
+            gap: 6px;
+        }
+
+        #cancelPlanBtn {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: auto !important;
+            flex: 1;
+        }
+
+        #cancelPlanBtn:hover {
+            background: #e5e7eb;
+        }
     </style>
 </head>
 <body>
     <!-- 顶部导航栏 -->
     <nav class="navbar glass">
         <div class="navbar-title">
-            <span class="icon">👁️</span>
+            <span class="icon" style="color: var(--primary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            </span>
             眼睛锻炼训练
         </div>
         <div style="display: flex; gap: 1rem; align-items: center;">
@@ -1170,7 +1618,7 @@
     <!-- 底部控制面板 -->
     <div class="control-panel glass">
         <button class="btn-primary" id="startBtn" aria-label="开始训练" title="开始/暂停">
-            ▶️
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </button>
         
         <label class="toggle-switch">
@@ -1246,7 +1694,7 @@
         </button>
         <div class="fullscreen-controls-panel">
             <button class="btn-primary" id="fullscreenStartBtn" aria-label="开始训练" title="开始/暂停">
-                ▶️
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             </button>
             
             <label class="toggle-switch">
@@ -1326,8 +1774,9 @@
     <!-- 侧边统计面板 -->
     <aside class="sidebar">
         <div class="stat-card glass-dark">
-            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">
-                📊 训练统计
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+                训练统计
             </h3>
             <div class="stat-item">
                 <div class="stat-label">训练次数</div>
@@ -1406,10 +1855,39 @@
             <div class="icon-grid" id="iconGrid"></div>
         </div>
 
+        <!-- 训练计划管理 -->
+        <div style="margin-top: 3rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="font-size: 18px; font-weight: 600; color: #10B981;">训练计划</h3>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-secondary" id="importPlanBtn" style="padding: 6px 10px; font-size: 13px;" title="导入计划">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </button>
+                    <button class="btn-secondary" id="createPlanBtn" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>新建计划</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 当前选择的计划 -->
+            <div class="setting-item" style="background: rgba(16, 185, 129, 0.05); border-radius: 8px; padding: 12px; margin-bottom: 1rem;">
+                <label class="setting-label" style="margin-bottom: 8px;">当前训练计划</label>
+                <select id="currentPlanSelector" class="plan-selector" style="width: 100%; padding: 8px 12px; border: 2px solid #10B981; border-radius: 6px; font-size: 14px; background: white; cursor: pointer;">
+                    <option value="">普通模式（不使用计划）</option>
+                </select>
+            </div>
+
+            <!-- 计划列表容器 -->
+            <div id="planListContainer" style="max-height: 400px; overflow-y: auto;">
+                <!-- 动态渲染计划卡片 -->
+            </div>
+        </div>
+
         <!-- 运动模式配置 -->
         <div class="setting-item" style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; margin-top: 0.5rem;">
-            <label class="setting-label" style="font-size: 16px; font-weight: 600; margin-bottom: 1rem; display: block;">
-                🎯 运动模式配置
+            <label class="setting-label" style="font-size: 16px; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                运动模式配置
             </label>
             <div id="modeConfigList" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 5px;">
                 <!-- 模式配置项将通过JS动态生成 -->
@@ -1429,48 +1907,158 @@
         </div>
     </aside>
 
+    <!-- 训练计划编辑器模态框 -->
+    <div id="planEditorOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; backdrop-filter: blur(4px);"></div>
+    <div id="planEditorModal" class="glass-dark" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; z-index: 10001; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <div style="padding: 24px;">
+            <!-- 头部 -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="modal-header-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                    <h2 style="font-size: 20px; font-weight: 600; color: var(--text-primary);">编辑训练计划</h2>
+                </div>
+                <button class="modal-close-btn" id="closePlanEditor"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+
+            <!-- 计划基本信息 -->
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text-secondary);">计划名称</label>
+                <input type="text" id="planNameInput" placeholder="例如：快速5分钟" maxlength="50" style="width: 100%; padding: 10px 12px; border: 2px solid #10B981; border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.9);">
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text-secondary);">计划描述</label>
+                <textarea id="planDescInput" placeholder="简单描述这个计划的用途..." maxlength="200" rows="2" style="width: 100%; padding: 10px 12px; border: 2px solid #10B981; border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.9); resize: vertical;"></textarea>
+            </div>
+
+            <!-- 模式列表 -->
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary);">训练模式</h3>
+                    <button class="btn-secondary" id="addModeBtn" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 4px;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>添加模式</span></button>
+                </div>
+                <div id="planModesContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding: 4px;">
+                    <!-- 动态渲染模式配置 -->
+                </div>
+            </div>
+
+            <!-- 底部按钮 -->
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn-primary btn-save-plan" id="savePlanBtn" style="flex: 1;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg><span>保存计划</span></button>
+                <button class="btn-secondary" id="cancelPlanBtn" style="flex: 1;">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模式选择模态框 -->
+    <div id="modeSelectorOverlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 20000; backdrop-filter: blur(4px);"></div>
+    <div id="modeSelectorModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20001;" class="mode-selector-content">
+        <div class="modal-header-simple">
+            <h3 class="modal-title-simple">选择训练模式</h3>
+            <button class="modal-close-simple" onclick="closeModeSelector()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="mode-grid" id="modeSelectorGrid">
+            <!-- 动态生成 -->
+        </div>
+    </div>
+
     <script>
+        // ========== SVG图标集 ==========
+        const SVGIcons = {
+            // 更多菜单（三点）
+            more: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>',
+            // 编辑
+            edit: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+            // 导出
+            export: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+            // 导入
+            import: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+            // 复制
+            copy: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+            // 剪贴板
+            clipboard: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+            // 删除
+            delete: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
+            // 关闭
+            close: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+            // 保存
+            save: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
+            // 添加
+            add: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+            
+            // 模式图标
+            horizontal: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 8 4 4-4 4"/><path d="M2 12h20"/><path d="m6 8-4 4 4 4"/></svg>',
+            vertical: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 18 4 4 4-4"/><path d="M12 2v20"/><path d="m8 6 4-4 4 4"/></svg>',
+            diagonal1: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 15l6 6"/><path d="M9 21h12V9"/></svg>',
+            diagonal2: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15L3 21"/><path d="M15 21H3V9"/></svg>',
+            figure8h: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c0-3 2.5-5 5-5s5 2 5 5-2.5 5-5 5-5-2-5-5Z"/><path d="M12 12c0-3-2.5-5-5-5S2 9 2 12s2.5 5 5 5 5-2 5-5Z"/></svg>',
+            figure8v: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c3 0 5-2.5 5-5s-2-5-5-5-5 2.5-5 5 2 5 5 5Z"/><path d="M12 12c3 0 5 2.5 5 5s-2 5-5 5-5-2.5-5-5 2-5 5-5Z"/></svg>',
+            random: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/><circle cx="8.5" cy="15.5" r="1.5"/></svg>',
+            bounce: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+            
+            // UI 图标
+            arrowUp: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>',
+            arrowDown: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+            clock: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+            repeat: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>',
+            zap: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+            
+            // 新增图标
+            eye: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+            play: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg>',
+            pause: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>',
+            chart: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
+            settings: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+            target: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+            bulb: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 12 2a4.65 4.65 0 0 0-4.5 9.5c.76.76 1.23 1.52 1.41 2.5"/></svg>',
+            check: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+            chevronUp: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+            chevronDown: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+        };
+
         // ========== 配置对象 ==========
         const TrainingConfig = {
             directions: {
                 horizontal: { 
                     name: '水平', 
-                    icon: '↔️',
+                    icon: SVGIcons.horizontal,
                     path: [[0,0], [1.0,0], [0,0], [0,0], [-1.0,0], [0,0]]
                 },
                 vertical: { 
                     name: '垂直', 
-                    icon: '↕️',
+                    icon: SVGIcons.vertical,
                     path: [[0,0], [0,-1.0], [0,0], [0,0], [0,1.0], [0,0]]
                 },
                 diagonal1: { 
                     name: '斜向↘', 
-                    icon: '↘️',
+                    icon: SVGIcons.diagonal1,
                     path: [[0,0], [1.0,1.0], [0,0], [0,0], [-1.0,-1.0], [0,0]]
                 },
                 diagonal2: { 
                     name: '斜向↙', 
-                    icon: '↙️',
+                    icon: SVGIcons.diagonal2,
                     path: [[0,0], [-1.0,1.0], [0,0], [0,0], [1.0,-1.0], [0,0]]
                 },
                 figure8h: {
                     name: '水平8字',
-                    icon: '∞',
+                    icon: SVGIcons.figure8h,
                     path: generateFigure8Path('horizontal')
                 },
                 figure8v: {
                     name: '垂直8字', 
-                    icon: '∞',
+                    icon: SVGIcons.figure8v,
                     path: generateFigure8Path('vertical')
                 },
                 random: {
                     name: '随机位置',
-                    icon: '🎲',
+                    icon: SVGIcons.random,
                     path: null // 特殊模式，使用随机坐标
                 },
                 bounce: {
                     name: '物理反弹',
-                    icon: '🏓',
+                    icon: SVGIcons.bounce,
                     path: null // 特殊模式，使用物理运动
                 }
             },
@@ -1494,6 +2082,410 @@
             bounceSpeedRange: { min: 1, max: 5 }, // 物理反弹速度范围
             icons: ['🐱', '🐶', '🐰', '🦋', '🐝', '🐞', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯']
         };
+
+        // ========== 训练计划管理系统 ==========
+        
+        /**
+         * 训练计划管理器
+         * 负责训练计划的创建、编辑、删除、持久化等操作
+         */
+        class TrainingPlanManager {
+            constructor() {
+                this.plans = [];
+                this.currentPlanId = null;
+                this.version = '1.0';
+            }
+
+            /**
+             * 加载计划列表
+             */
+            loadPlans() {
+                try {
+                    const saved = localStorage.getItem('eyeTrainingPlans');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        this.plans = data.plans || [];
+                        this.currentPlanId = data.currentPlanId || null;
+                        console.log('✅ 训练计划加载成功:', this.plans.length, '个计划');
+                    } else {
+                        // 首次使用，创建默认计划
+                        this.plans = this.getDefaultPlans();
+                        this.currentPlanId = this.plans[0]?.id || null;
+                        this.savePlans();
+                        console.log('🎉 初始化默认训练计划');
+                    }
+                } catch (error) {
+                    console.error('❌ 加载训练计划失败:', error);
+                    this.plans = this.getDefaultPlans();
+                    this.currentPlanId = this.plans[0]?.id || null;
+                }
+            }
+
+            /**
+             * 保存计划列表
+             */
+            savePlans() {
+                try {
+                    const data = {
+                        version: this.version,
+                        plans: this.plans,
+                        currentPlanId: this.currentPlanId,
+                        updatedAt: Date.now()
+                    };
+                    localStorage.setItem('eyeTrainingPlans', JSON.stringify(data));
+                    console.log('💾 训练计划已保存');
+                } catch (error) {
+                    console.error('❌ 保存训练计划失败:', error);
+                }
+            }
+
+            /**
+             * 获取默认训练计划
+             */
+            getDefaultPlans() {
+                return [
+                    {
+                        id: 'plan-default-1',
+                        name: '全面训练',
+                        description: '包含所有8种模式，每个模式循环2次，适合完整训练',
+                        createdAt: Date.now(),
+                        modes: [
+                            { type: 'horizontal', loops: 2, duration: 15 },
+                            { type: 'vertical', loops: 2, duration: 15 },
+                            { type: 'diagonal1', loops: 2, duration: 15 },
+                            { type: 'diagonal2', loops: 2, duration: 15 },
+                            { type: 'figure8h', loops: 2, duration: 15, speed: 1.0 },
+                            { type: 'figure8v', loops: 2, duration: 15, speed: 1.0 },
+                            { type: 'random', loops: 2, duration: 15, interval: 3 },
+                            { type: 'bounce', loops: 2, duration: 15, speed: 2 }
+                        ]
+                    },
+                    {
+                        id: 'plan-default-2',
+                        name: '快速5分钟',
+                        description: '精选3个高效模式，快速缓解疲劳',
+                        createdAt: Date.now(),
+                        modes: [
+                            { type: 'horizontal', loops: 1, duration: 60 },
+                            { type: 'vertical', loops: 1, duration: 60 },
+                            { type: 'figure8h', loops: 1, duration: 60, speed: 1.2 }
+                        ]
+                    },
+                    {
+                        id: 'plan-default-3',
+                        name: '缓解疲劳',
+                        description: '以8字和随机模式为主，轻柔放松',
+                        createdAt: Date.now(),
+                        modes: [
+                            { type: 'figure8h', loops: 2, duration: 20, speed: 0.8 },
+                            { type: 'figure8v', loops: 2, duration: 20, speed: 0.8 },
+                            { type: 'random', loops: 3, duration: 12, interval: 4 }
+                        ]
+                    }
+                ];
+            }
+
+            /**
+             * 获取所有计划
+             */
+            getAllPlans() {
+                return this.plans;
+            }
+
+            /**
+             * 根据ID获取计划
+             */
+            getPlan(planId) {
+                return this.plans.find(p => p.id === planId);
+            }
+
+            /**
+             * 获取当前活动计划
+             */
+            getCurrentPlan() {
+                return this.getPlan(this.currentPlanId);
+            }
+
+            /**
+             * 获取当前计划名称
+             */
+            getCurrentPlanName() {
+                const plan = this.getCurrentPlan();
+                return plan ? plan.name : '未选择计划';
+            }
+
+            /**
+             * 设置当前活动计划
+             */
+            setCurrentPlan(planId) {
+                const plan = this.getPlan(planId);
+                if (plan) {
+                    this.currentPlanId = planId;
+                    this.savePlans();
+                    console.log('🎯 切换到计划:', plan.name);
+                    return true;
+                }
+                return false;
+            }
+
+            /**
+             * 创建新计划
+             */
+            createPlan(name, description = '') {
+                const plan = {
+                    id: 'plan-' + Date.now(),
+                    name: name.substring(0, 50), // 限制长度
+                    description: description.substring(0, 200),
+                    createdAt: Date.now(),
+                    modes: []
+                };
+                this.plans.push(plan);
+                this.savePlans();
+                console.log('✨ 创建新计划:', plan.name);
+                return plan;
+            }
+
+            /**
+             * 更新计划
+             */
+            updatePlan(planId, updates) {
+                const plan = this.getPlan(planId);
+                if (!plan) return false;
+
+                if (updates.name !== undefined) {
+                    plan.name = updates.name.substring(0, 50);
+                }
+                if (updates.description !== undefined) {
+                    plan.description = updates.description.substring(0, 200);
+                }
+                if (updates.modes !== undefined) {
+                    plan.modes = updates.modes;
+                }
+
+                this.savePlans();
+                console.log('📝 更新计划:', plan.name);
+                return true;
+            }
+
+            /**
+             * 删除计划
+             */
+            deletePlan(planId) {
+                const index = this.plans.findIndex(p => p.id === planId);
+                if (index === -1) return false;
+
+                const planName = this.plans[index].name;
+                this.plans.splice(index, 1);
+
+                // 如果删除的是当前计划，切换到第一个
+                if (this.currentPlanId === planId) {
+                    this.currentPlanId = this.plans[0]?.id || null;
+                }
+
+                this.savePlans();
+                console.log('🗑️ 删除计划:', planName);
+                return true;
+            }
+
+            /**
+             * 复制计划
+             */
+            duplicatePlan(planId) {
+                const sourcePlan = this.getPlan(planId);
+                if (!sourcePlan) return null;
+
+                const newPlan = {
+                    id: 'plan-' + Date.now(),
+                    name: sourcePlan.name + ' (副本)',
+                    description: sourcePlan.description,
+                    createdAt: Date.now(),
+                    modes: JSON.parse(JSON.stringify(sourcePlan.modes))
+                };
+
+                this.plans.push(newPlan);
+                this.savePlans();
+                console.log('📋 复制计划:', sourcePlan.name, '→', newPlan.name);
+                return newPlan;
+            }
+
+            /**
+             * 验证模式参数
+             */
+            validateModeConfig(mode) {
+                const validated = { ...mode };
+                
+                // 限制循环次数 1-10
+                validated.loops = Math.max(1, Math.min(10, validated.loops || 1));
+                
+                // 限制持续时间 5-120秒
+                validated.duration = Math.max(5, Math.min(120, validated.duration || 15));
+                
+                // 根据模式类型验证特定参数
+                if (mode.type === 'figure8h' || mode.type === 'figure8v') {
+                    validated.speed = Math.max(0.2, Math.min(3, validated.speed || 1));
+                } else if (mode.type === 'bounce') {
+                    validated.speed = Math.max(1, Math.min(15, validated.speed || 2));
+                } else if (mode.type === 'random') {
+                    validated.interval = Math.max(1, Math.min(30, validated.interval || 3));
+                }
+                
+                return validated;
+            }
+
+            /**
+             * 导出计划为JSON
+             */
+            exportPlan(planId) {
+                const plan = this.getPlan(planId);
+                if (!plan) return null;
+
+                const exportData = {
+                    version: this.version,
+                    plan: plan,
+                    exportedAt: Date.now()
+                };
+
+                return JSON.stringify(exportData, null, 2);
+            }
+
+            /**
+             * 导入计划
+             */
+            importPlan(jsonString) {
+                try {
+                    const data = JSON.parse(jsonString);
+                    const plan = data.plan;
+
+                    // 验证数据格式
+                    if (!plan || !plan.name || !Array.isArray(plan.modes)) {
+                        throw new Error('无效的计划数据格式');
+                    }
+
+                    // 生成新ID避免冲突
+                    const newPlan = {
+                        id: 'plan-' + Date.now(),
+                        name: plan.name + ' (导入)',
+                        description: plan.description || '',
+                        createdAt: Date.now(),
+                        modes: plan.modes.map(m => this.validateModeConfig(m))
+                    };
+
+                    this.plans.push(newPlan);
+                    this.savePlans();
+                    console.log('📥 导入计划成功:', newPlan.name);
+                    return newPlan;
+                } catch (error) {
+                    console.error('❌ 导入计划失败:', error);
+                    return null;
+                }
+            }
+        }
+
+        /**
+         * 计划执行状态管理器
+         * 负责训练执行队列的生成和进度跟踪
+         */
+        class PlanExecutionState {
+            constructor() {
+                this.currentPlanId = null;
+                this.executionQueue = [];
+                this.currentQueueIndex = 0;
+                this.usingPlanMode = false;
+            }
+
+            /**
+             * 加载计划并生成执行队列
+             */
+            loadPlan(planId) {
+                const plan = planManager.getPlan(planId);
+                if (!plan || !plan.modes || plan.modes.length === 0) {
+                    console.warn('⚠️ 计划为空或不存在');
+                    return false;
+                }
+
+                this.currentPlanId = planId;
+                this.executionQueue = [];
+                this.currentQueueIndex = 0;
+                this.usingPlanMode = true;
+
+                // 展开循环，生成完整执行队列
+                plan.modes.forEach((mode, modeIndex) => {
+                    const loops = mode.loops || 1;
+                    for (let i = 0; i < loops; i++) {
+                        this.executionQueue.push({
+                            type: mode.type,
+                            duration: mode.duration,
+                            speed: mode.speed,
+                            interval: mode.interval,
+                            loopIndex: i + 1,
+                            totalLoops: loops,
+                            modeIndex: modeIndex + 1,
+                            totalModes: plan.modes.length
+                        });
+                    }
+                });
+
+                console.log('🎬 执行队列已生成:', this.executionQueue.length, '个任务');
+                return true;
+            }
+
+            /**
+             * 清除计划模式，返回普通模式
+             */
+            clearPlan() {
+                this.currentPlanId = null;
+                this.executionQueue = [];
+                this.currentQueueIndex = 0;
+                this.usingPlanMode = false;
+                console.log('🔄 返回普通训练模式');
+            }
+
+            /**
+             * 获取当前执行项
+             */
+            getCurrentExecution() {
+                if (this.currentQueueIndex < this.executionQueue.length) {
+                    return this.executionQueue[this.currentQueueIndex];
+                }
+                return null;
+            }
+
+            /**
+             * 前进到下一个执行项
+             */
+            advanceQueue() {
+                this.currentQueueIndex++;
+                return this.currentQueueIndex < this.executionQueue.length;
+            }
+
+            /**
+             * 是否正在使用计划模式
+             */
+            isUsingPlan() {
+                return this.usingPlanMode && this.currentPlanId !== null;
+            }
+
+            /**
+             * 获取整体进度信息
+             */
+            getProgressInfo() {
+                const execution = this.getCurrentExecution();
+                if (!execution) return null;
+
+                return {
+                    planName: planManager.getCurrentPlanName(),
+                    currentIndex: this.currentQueueIndex + 1,
+                    totalTasks: this.executionQueue.length,
+                    loopIndex: execution.loopIndex,
+                    totalLoops: execution.totalLoops,
+                    modeType: execution.type
+                };
+            }
+        }
+
+        // 初始化全局实例
+        const planManager = new TrainingPlanManager();
+        const planExecutionState = new PlanExecutionState();
 
         // 生成8字轨迹路径
         function generateFigure8Path(orientation) {
@@ -1601,8 +2593,10 @@
             loadSettings();
             loadStatistics();
             loadModeConfigs();
+            planManager.loadPlans(); // 加载训练计划
             initializeUI();
             initializeModeConfigUI();
+            renderPlanManagementUI(); // 渲染计划管理界面
             setupEventListeners();
             drawInitialState();
         }
@@ -1655,7 +2649,7 @@
                 // 图标
                 const icon = document.createElement('span');
                 icon.className = 'mode-config-icon';
-                icon.textContent = dir.icon;
+                icon.innerHTML = dir.icon;
 
                 // 名称
                 const name = document.createElement('span');
@@ -1687,8 +2681,8 @@
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'mode-config-actions';
                 actionsDiv.innerHTML = `
-                    <button class="mode-config-btn" onclick="moveMode('${key}', -1)" ${index === 0 ? 'disabled' : ''} title="上移">↑</button>
-                    <button class="mode-config-btn" onclick="moveMode('${key}', 1)" ${index === order.length - 1 ? 'disabled' : ''} title="下移">↓</button>
+                    <button class="mode-config-btn" onclick="moveMode('${key}', -1)" ${index === 0 ? 'disabled' : ''} title="上移">${SVGIcons.arrowUp}</button>
+                    <button class="mode-config-btn" onclick="moveMode('${key}', 1)" ${index === order.length - 1 ? 'disabled' : ''} title="下移">${SVGIcons.arrowDown}</button>
                 `;
 
                 item.appendChild(checkbox);
@@ -1755,6 +2749,591 @@
                 renderModeConfigList();
                 saveModeConfigs();
             }
+        }
+
+        // ========== 训练计划UI渲染 ==========
+
+        /**
+         * 渲染计划管理界面
+         */
+        function renderPlanManagementUI() {
+            renderPlanSelector();
+            renderPlanList();
+            initPlanEventListeners();
+        }
+
+        /**
+         * 渲染计划选择器
+         */
+        function renderPlanSelector() {
+            const selector = document.getElementById('currentPlanSelector');
+            if (!selector) return;
+
+            const plans = planManager.getAllPlans();
+            const currentId = planManager.currentPlanId;
+
+            selector.innerHTML = '<option value="">普通模式（不使用计划）</option>';
+            
+            plans.forEach(plan => {
+                const option = document.createElement('option');
+                option.value = plan.id;
+                option.textContent = plan.name;
+                if (plan.id === currentId) {
+                    option.selected = true;
+                }
+                selector.appendChild(option);
+            });
+        }
+
+        /**
+         * 渲染计划列表
+         */
+        function renderPlanList() {
+            const container = document.getElementById('planListContainer');
+            if (!container) return;
+
+            const plans = planManager.getAllPlans();
+            container.innerHTML = '';
+
+            if (plans.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">还没有训练计划，点击上方按钮创建吧！</div>';
+                return;
+            }
+
+            plans.forEach(plan => {
+                const card = document.createElement('div');
+                card.className = 'plan-card';
+                card.style.cssText = `
+                    background: rgba(255,255,255,0.9);
+                    border: 2px solid #10B981;
+                    border-radius: 12px;
+                    padding: 14px 16px;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                `;
+
+                const isActive = plan.id === planManager.currentPlanId;
+                if (isActive) {
+                    card.style.background = 'rgba(16, 185, 129, 0.1)';
+                    card.style.borderColor = '#059669';
+                    card.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.2)';
+                }
+
+                const descText = plan.description || '暂无描述';
+                const loopCount = plan.modes.reduce((sum, m) => sum + m.loops, 0);
+
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                        <div style="font-size: 15px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px; flex: 1; padding-right: 8px;">
+                            ${isActive ? `<span style="color: var(--primary); display: flex;">${SVGIcons.check}</span>` : ''}
+                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${plan.name}</span>
+                        </div>
+                        <div class="plan-card-actions" style="margin-top: -2px; margin-right: -6px;">
+                            <button class="more-btn" onclick="event.stopPropagation(); toggleActionMenu(this)" title="更多操作">
+                                ${SVGIcons.more}
+                            </button>
+                            <div class="action-menu">
+                                <button class="action-menu-item" onclick="event.stopPropagation(); editPlan('${plan.id}'); closeAllMenus();">
+                                    ${SVGIcons.edit}<span>编辑</span>
+                                </button>
+                                <button class="action-menu-item" onclick="event.stopPropagation(); exportPlan('${plan.id}'); closeAllMenus();">
+                                    ${SVGIcons.export}<span>导出</span>
+                                </button>
+                                <button class="action-menu-item" onclick="event.stopPropagation(); duplicatePlan('${plan.id}'); closeAllMenus();">
+                                    ${SVGIcons.copy}<span>复制</span>
+                                </button>
+                                <button class="action-menu-item delete-item" onclick="event.stopPropagation(); deletePlan('${plan.id}'); closeAllMenus();">
+                                    ${SVGIcons.delete}<span>删除</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted);">
+                        <div class="plan-description-wrapper" data-full-text="${descText}" title="${descText}" style="max-width: 180px;">
+                            <span class="plan-description-text">${descText}</span>
+                        </div>
+                        <span style="opacity: 0.6;">·</span>
+                        <span>${plan.modes.length} 个模式</span>
+                        <span style="opacity: 0.6;">·</span>
+                        <span>${loopCount} 次循环</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    // 如果点击的是按钮或菜单，不选择计划
+                    if (e.target.closest('.plan-card-actions')) return;
+                    selectPlan(plan.id);
+                });
+
+                container.appendChild(card);
+            });
+
+            // 点击其他区域关闭所有菜单
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.plan-card-actions')) {
+                    closeAllMenus();
+                }
+            });
+        }
+
+        // 切换操作菜单
+        function toggleActionMenu(btn) {
+            const actions = btn.closest('.plan-card-actions');
+            const wasExpanded = actions.classList.contains('expanded');
+
+            // 关闭所有菜单
+            closeAllMenus();
+
+            // 如果之前未展开，则展开当前菜单
+            if (!wasExpanded) {
+                actions.classList.add('expanded');
+            }
+        }
+
+        // 关闭所有操作菜单
+        function closeAllMenus() {
+            document.querySelectorAll('.plan-card-actions.expanded').forEach(el => {
+                el.classList.remove('expanded');
+            });
+        }
+
+        /**
+         * 初始化计划相关事件监听器
+         */
+        function initPlanEventListeners() {
+            // 新建计划按钮
+            document.getElementById('createPlanBtn')?.addEventListener('click', () => {
+                openPlanEditor();
+            });
+
+            // 导入计划按钮
+            document.getElementById('importPlanBtn')?.addEventListener('click', () => {
+                importPlanFromFile();
+            });
+
+            // 计划选择器
+            document.getElementById('currentPlanSelector')?.addEventListener('change', (e) => {
+                const planId = e.target.value;
+                if (planId) {
+                    planManager.setCurrentPlan(planId);
+                } else {
+                    planManager.currentPlanId = null;
+                    planManager.savePlans();
+                }
+                renderPlanList();
+            });
+
+            // 编辑器关闭按钮
+            document.getElementById('closePlanEditor')?.addEventListener('click', closePlanEditor);
+            document.getElementById('planEditorOverlay')?.addEventListener('click', closePlanEditor);
+            document.getElementById('cancelPlanBtn')?.addEventListener('click', closePlanEditor);
+
+            // 保存计划按钮
+            document.getElementById('savePlanBtn')?.addEventListener('click', savePlanFromEditor);
+
+            // 添加模式按钮
+            document.getElementById('addModeBtn')?.addEventListener('click', addModeToEditor);
+        }
+
+        /**
+         * 导出计划为JSON文件
+         */
+        function exportPlan(planId) {
+            const jsonString = planManager.exportPlan(planId);
+            if (!jsonString) {
+                alert('导出失败，计划不存在！');
+                return;
+            }
+
+            const plan = planManager.getPlan(planId);
+            const filename = `训练计划_${plan.name}_${new Date().getTime()}.json`;
+            
+            // 创建下载链接
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log('📤 计划已导出:', filename);
+        }
+
+        /**
+         * 从文件导入计划
+         */
+        function importPlanFromFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const jsonString = event.target.result;
+                        const newPlan = planManager.importPlan(jsonString);
+                        
+                        if (newPlan) {
+                            renderPlanManagementUI();
+                            alert(`✅ 计划"${newPlan.name}"导入成功！`);
+                        } else {
+                            alert('❌ 导入失败，请检查文件格式是否正确！');
+                        }
+                    } catch (error) {
+                        console.error('导入错误:', error);
+                        alert('❌ 导入失败：' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            input.click();
+        }
+
+        /**
+         * 选择计划
+         */
+        function selectPlan(planId) {
+            planManager.setCurrentPlan(planId);
+            renderPlanSelector();
+            renderPlanList();
+        }
+
+        /**
+         * 删除计划
+         */
+        function deletePlan(planId) {
+            const plan = planManager.getPlan(planId);
+            if (!plan) return;
+
+            if (confirm(`确定要删除计划"${plan.name}"吗？此操作无法撤销。`)) {
+                planManager.deletePlan(planId);
+                renderPlanManagementUI();
+            }
+        }
+
+        /**
+         * 复制计划
+         */
+        function duplicatePlan(planId) {
+            const newPlan = planManager.duplicatePlan(planId);
+            if (newPlan) {
+                renderPlanManagementUI();
+            }
+        }
+
+        // ========== 计划编辑器 ==========
+
+        let currentEditingPlanId = null;
+
+        /**
+         * 打开计划编辑器
+         */
+        function openPlanEditor(planId = null) {
+            currentEditingPlanId = planId;
+            const modal = document.getElementById('planEditorModal');
+            const overlay = document.getElementById('planEditorOverlay');
+            
+            if (planId) {
+                // 编辑现有计划
+                const plan = planManager.getPlan(planId);
+                if (plan) {
+                    document.getElementById('planNameInput').value = plan.name;
+                    document.getElementById('planDescInput').value = plan.description || '';
+                    renderPlanModesInEditor(plan.modes);
+                }
+            } else {
+                // 新建计划
+                document.getElementById('planNameInput').value = '';
+                document.getElementById('planDescInput').value = '';
+                renderPlanModesInEditor([]);
+            }
+
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        /**
+         * 关闭计划编辑器
+         */
+        function closePlanEditor() {
+            document.getElementById('planEditorModal').style.display = 'none';
+            document.getElementById('planEditorOverlay').style.display = 'none';
+            currentEditingPlanId = null;
+        }
+
+        /**
+         * 渲染编辑器中的模式列表
+         */
+        function renderPlanModesInEditor(modes) {
+            const container = document.getElementById('planModesContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            if (modes.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                        <div style="width: 48px; height: 48px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #9ca3af;">
+                            ${SVGIcons.add}
+                        </div>
+                        <div>点击"添加模式"开始配置</div>
+                    </div>`;
+                return;
+            }
+
+            modes.forEach((mode, index) => {
+                const direction = TrainingConfig.directions[mode.type];
+                if (!direction) return;
+
+                const iconSvg = SVGIcons[mode.type] || SVGIcons.zap; // Use specific icon or fallback
+
+                const modeItem = document.createElement('div');
+                modeItem.className = 'editor-mode-item';
+                
+                let extraParams = '';
+                
+                if (mode.type === 'figure8h' || mode.type === 'figure8v') {
+                    extraParams = `
+                        <div class="param-group" title="速度倍率">
+                            <span class="param-label">${SVGIcons.zap}</span>
+                            <input type="number" min="0.2" max="3" step="0.1" value="${mode.speed || 1}" 
+                                onchange="updateEditorMode(${index}, 'speed', this.value)" 
+                                class="param-input-clean">
+                        </div>
+                    `;
+                } else if (mode.type === 'bounce') {
+                    extraParams = `
+                        <div class="param-group" title="速度倍率">
+                            <span class="param-label">${SVGIcons.zap}</span>
+                            <input type="number" min="1" max="15" step="0.5" value="${mode.speed || 2}" 
+                                onchange="updateEditorMode(${index}, 'speed', this.value)" 
+                                class="param-input-clean">
+                        </div>
+                    `;
+                } else if (mode.type === 'random') {
+                    extraParams = `
+                        <div class="param-group" title="间隔(秒)">
+                            <span class="param-label">${SVGIcons.clock}</span>
+                            <input type="number" min="1" max="30" value="${mode.interval || 3}" 
+                                onchange="updateEditorMode(${index}, 'interval', this.value)" 
+                                class="param-input-clean">
+                        </div>
+                    `;
+                }
+
+                modeItem.innerHTML = `
+                    <div class="editor-mode-icon-wrapper">
+                        ${iconSvg}
+                    </div>
+                    <div class="editor-mode-content">
+                        <div class="editor-mode-header">
+                            <span class="editor-mode-title">${direction.name}</span>
+                        </div>
+                        <div class="editor-mode-params">
+                            <div class="param-group" title="循环次数">
+                                <span class="param-label">${SVGIcons.repeat}</span>
+                                <input type="number" min="1" max="10" value="${mode.loops}" 
+                                    onchange="updateEditorMode(${index}, 'loops', this.value)" 
+                                    class="param-input-clean">
+                            </div>
+                            <div class="param-group" title="单次时长(秒)">
+                                <span class="param-label">${SVGIcons.clock}</span>
+                                <input type="number" min="5" max="120" value="${mode.duration}" 
+                                    onchange="updateEditorMode(${index}, 'duration', this.value)" 
+                                    class="param-input-clean">
+                            </div>
+                            ${extraParams}
+                        </div>
+                    </div>
+                    <div class="editor-mode-actions">
+                        <div class="action-btn-group">
+                            <button class="action-btn-icon small" onclick="moveModeInEditor(${index}, -1)" ${index === 0 ? 'disabled' : ''} title="上移">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                            </button>
+                            <button class="action-btn-icon small" onclick="moveModeInEditor(${index}, 1)" ${index === modes.length - 1 ? 'disabled' : ''} title="下移">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </button>
+                        </div>
+                        <button class="action-btn-icon delete" onclick="removeModeFromEditor(${index})" title="删除">
+                            ${SVGIcons.delete}
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(modeItem);
+            });
+        }
+
+        // 编辑器临时数据
+        let editorModes = [];
+
+        /**
+         * 打开模式选择器
+         */
+        function openModeSelector() {
+            const modal = document.getElementById('modeSelectorModal');
+            const overlay = document.getElementById('modeSelectorOverlay');
+            const grid = document.getElementById('modeSelectorGrid');
+            
+            if (!grid) return;
+            
+            // 渲染模式列表
+            grid.innerHTML = '';
+            Object.keys(TrainingConfig.directions).forEach(key => {
+                const config = TrainingConfig.directions[key];
+                const card = document.createElement('div');
+                card.className = 'mode-option-card';
+                card.onclick = () => selectMode(key);
+                
+                // 获取对应的 SVG 图标
+                const iconSvg = SVGIcons[key] || SVGIcons.zap;
+                
+                card.innerHTML = `
+                    <div class="mode-option-icon">${iconSvg}</div>
+                    <div class="mode-option-name">${config.name}</div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        /**
+         * 关闭模式选择器
+         */
+        function closeModeSelector() {
+            const modal = document.getElementById('modeSelectorModal');
+            const overlay = document.getElementById('modeSelectorOverlay');
+            if (modal) modal.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        /**
+         * 选择模式（从选择器）
+         */
+        function selectMode(modeKey) {
+            const newMode = {
+                type: modeKey,
+                loops: 1,
+                duration: 15
+            };
+
+            // 默认参数
+            if (modeKey.startsWith('figure8')) {
+                newMode.speed = 1.0;
+            } else if (modeKey === 'bounce') {
+                newMode.speed = 2;
+            } else if (modeKey === 'random') {
+                newMode.interval = 3;
+            }
+
+            editorModes.push(newMode);
+            renderPlanModesInEditor(editorModes);
+            closeModeSelector();
+            
+            // 滚动到底部
+            const container = document.getElementById('planModesContainer');
+            if (container) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 50);
+            }
+        }
+
+        /**
+         * 添加模式到编辑器
+         */
+        function addModeToEditor() {
+            openModeSelector();
+        }
+
+        /**
+         * 更新编辑器中的模式
+         */
+        function updateEditorMode(index, field, value) {
+            if (index >= 0 && index < editorModes.length) {
+                editorModes[index][field] = field === 'speed' ? parseFloat(value) : parseInt(value);
+            }
+        }
+
+        /**
+         * 移动编辑器中的模式
+         */
+        function moveModeInEditor(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex >= 0 && newIndex < editorModes.length) {
+                [editorModes[index], editorModes[newIndex]] = [editorModes[newIndex], editorModes[index]];
+                renderPlanModesInEditor(editorModes);
+            }
+        }
+
+        /**
+         * 从编辑器中删除模式
+         */
+        function removeModeFromEditor(index) {
+            if (confirm('确定要删除这个模式吗？')) {
+                editorModes.splice(index, 1);
+                renderPlanModesInEditor(editorModes);
+            }
+        }
+
+        /**
+         * 从编辑器保存计划
+         */
+        function savePlanFromEditor() {
+            const name = document.getElementById('planNameInput').value.trim();
+            const description = document.getElementById('planDescInput').value.trim();
+
+            if (!name) {
+                alert('请输入计划名称！');
+                return;
+            }
+
+            if (editorModes.length === 0) {
+                alert('请至少添加一个训练模式！');
+                return;
+            }
+
+            // 验证所有模式配置
+            const validatedModes = editorModes.map(m => planManager.validateModeConfig(m));
+
+            if (currentEditingPlanId) {
+                // 更新现有计划
+                planManager.updatePlan(currentEditingPlanId, {
+                    name,
+                    description,
+                    modes: validatedModes
+                });
+            } else {
+                // 创建新计划
+                const plan = planManager.createPlan(name, description);
+                planManager.updatePlan(plan.id, { modes: validatedModes });
+            }
+
+            closePlanEditor();
+            renderPlanManagementUI();
+        }
+
+        /**
+         * 编辑计划
+         */
+        function editPlan(planId) {
+            const plan = planManager.getPlan(planId);
+            if (!plan) return;
+
+            editorModes = JSON.parse(JSON.stringify(plan.modes));
+            openPlanEditor(planId);
         }
 
         function loadSettings() {
@@ -2010,8 +3589,8 @@
             function toggleFullscreenControls() {
                 fullscreenControls.classList.toggle('collapsed');
                 const isCollapsed = fullscreenControls.classList.contains('collapsed');
-                fullscreenToggleBtn.textContent = isCollapsed ? '▲' : '▼';
-                fullscreenToggleIndicator.textContent = isCollapsed ? '▲' : '▼';
+                fullscreenToggleBtn.innerHTML = isCollapsed ? SVGIcons.chevronUp : SVGIcons.chevronDown;
+                fullscreenToggleIndicator.innerHTML = isCollapsed ? SVGIcons.chevronUp : SVGIcons.chevronDown;
             }
             
             // 全屏控制面板事件
@@ -2193,11 +3772,40 @@
         let durationInterval = null;
 
         function startTraining() {
+            // 检查是否选择了计划
+            const selectedPlanId = planManager.currentPlanId;
+            if (selectedPlanId) {
+                // 加载计划执行队列
+                const success = planExecutionState.loadPlan(selectedPlanId);
+                if (!success) {
+                    alert('计划加载失败，请检查计划配置！');
+                    return;
+                }
+                // 设置初始模式
+                const firstExecution = planExecutionState.getCurrentExecution();
+                if (firstExecution) {
+                    appState.currentDirection = firstExecution.type;
+                    // 应用计划中的参数
+                    if (firstExecution.speed !== undefined) {
+                        appState.modeConfigs[firstExecution.type].speed = firstExecution.speed;
+                    }
+                    if (firstExecution.interval !== undefined) {
+                        appState.modeConfigs[firstExecution.type].interval = firstExecution.interval;
+                    }
+                    if (firstExecution.duration !== undefined) {
+                        appState.modeConfigs[firstExecution.type].duration = firstExecution.duration;
+                    }
+                }
+            } else {
+                // 清除计划模式，使用普通模式
+                planExecutionState.clearPlan();
+            }
+            
             appState.isRunning = true;
             appState.isPaused = false;
-            startBtn.textContent = '⏸️';
+            startBtn.innerHTML = SVGIcons.pause;
             startBtn.title = '暂停';
-            fullscreenStartBtn.textContent = '⏸️';
+            fullscreenStartBtn.innerHTML = SVGIcons.pause;
             fullscreenStartBtn.title = '暂停';
             
             if (!appState.statistics.sessionStart) {
@@ -2205,6 +3813,12 @@
             }
             
             updateDirectionIndicator();
+            
+            // 如果使用计划模式，显示计划进度
+            if (planExecutionState.isUsingPlan()) {
+                updatePlanProgressDisplay();
+            }
+            
             playSound('start');
             startAnimation();
             startDurationCounter();
@@ -2213,9 +3827,9 @@
         function pauseTraining() {
             appState.isRunning = false;
             appState.isPaused = true;
-            startBtn.textContent = '▶️';
+            startBtn.innerHTML = SVGIcons.play;
             startBtn.title = '开始';
-            fullscreenStartBtn.textContent = '▶️';
+            fullscreenStartBtn.innerHTML = SVGIcons.play;
             fullscreenStartBtn.title = '开始';
             
             // 更新累计时长
@@ -2255,8 +3869,8 @@
 
         function updateDirectionIndicator() {
             const dir = TrainingConfig.directions[appState.currentDirection];
-            directionIndicator.textContent = `${dir.icon} ${dir.name}方向`;
-            currentDirectionEl.textContent = `${dir.icon} ${dir.name}`;
+            directionIndicator.innerHTML = `${dir.icon} ${dir.name}方向`;
+            currentDirectionEl.innerHTML = `${dir.icon} ${dir.name}`;
         }
 
         function updateStatisticsDisplay() {
@@ -2632,8 +4246,36 @@
             updateStatisticsDisplay();
             saveStatistics();
 
-            // 自动模式下切换方向
-            if (appState.mode === 'auto') {
+            // 如果使用计划模式
+            if (planExecutionState.isUsingPlan()) {
+                const hasNext = planExecutionState.advanceQueue();
+                if (hasNext) {
+                    const nextExecution = planExecutionState.getCurrentExecution();
+                    appState.currentDirection = nextExecution.type;
+                    
+                    // 应用当前执行项的参数到全局设置（用于模式配置）
+                    if (nextExecution.speed !== undefined) {
+                        appState.modeConfigs[nextExecution.type].speed = nextExecution.speed;
+                    }
+                    if (nextExecution.interval !== undefined) {
+                        appState.modeConfigs[nextExecution.type].interval = nextExecution.interval;
+                    }
+                    if (nextExecution.duration !== undefined) {
+                        appState.modeConfigs[nextExecution.type].duration = nextExecution.duration;
+                    }
+                    
+                    updateDirectionIndicator();
+                    updatePlanProgressDisplay();
+                    playSound('switch');
+                } else {
+                    // 计划完成
+                    stopTraining();
+                    showPlanCompleteNotification();
+                    return;
+                }
+            } 
+            // 原有的自动模式逻辑
+            else if (appState.mode === 'auto') {
                 // 获取所有启用的模式
                 const enabledModes = appState.directionOrder.filter(key => appState.modeConfigs[key]?.enabled);
 
@@ -2664,6 +4306,80 @@
                     }
                 }, 500);
             }
+        }
+
+        /**
+         * 更新计划进度显示
+         */
+        function updatePlanProgressDisplay() {
+            const progressInfo = planExecutionState.getProgressInfo();
+            if (!progressInfo) return;
+
+            const direction = TrainingConfig.directions[progressInfo.modeType];
+            if (!direction) return;
+
+            // 更新方向指示器显示进度信息
+            const indicator = document.getElementById('directionIndicator');
+            if (indicator) {
+                indicator.innerHTML = `
+                    <div style="font-size: 12px; opacity: 0.9; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                        ${SVGIcons.clipboard} ${progressInfo.planName}
+                    </div>
+                    <div style="font-size: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 1px 0;">
+                        ${direction.icon} ${direction.name}
+                    </div>
+                    <div style="font-size: 12px; opacity: 0.8;">
+                        循环 ${progressInfo.loopIndex}/${progressInfo.totalLoops} · 任务 ${progressInfo.currentIndex}/${progressInfo.totalTasks}
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * 停止训练
+         */
+        function stopTraining() {
+            appState.isRunning = false;
+            appState.isPaused = false;
+            startBtn.innerHTML = SVGIcons.play;
+            startBtn.classList.remove('btn-pause');
+            startBtn.classList.add('btn-primary');
+            
+            fullscreenStartBtn.innerHTML = SVGIcons.play;
+            fullscreenStartBtn.classList.remove('btn-pause');
+            fullscreenStartBtn.classList.add('btn-primary');
+            
+            if (animationState.animationId) {
+                cancelAnimationFrame(animationState.animationId);
+                animationState.animationId = null;
+            }
+        }
+
+        /**
+         * 显示计划完成通知
+         */
+        function showPlanCompleteNotification() {
+            const planName = planManager.getCurrentPlanName();
+            
+            // 使用Canvas绘制完成提示
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#10B981';
+            ctx.font = 'bold 48px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('训练完成！', canvas.width / 2, canvas.height / 2 - 40);
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '24px Inter, sans-serif';
+            ctx.fillText(`"${planName}" 已全部完成`, canvas.width / 2, canvas.height / 2 + 20);
+            
+            ctx.font = '18px Inter, sans-serif';
+            ctx.fillStyle = '#9CA3AF';
+            ctx.fillText('点击开始按钮继续训练', canvas.width / 2, canvas.height / 2 + 60);
+            
+            playSound('complete');
         }
 
         // ========== 音效系统 ==========
